@@ -1,282 +1,119 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pepe's Grill House</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
-    
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
-    .title-font { font-family: 'Playfair Display', serif; }
-    
-    .accent { color: #e11d48; }
-    .btn-accent { background-color: #e11d48; color: white; }
-    .btn-accent:hover { background-color: #b91c1c; }
-    
-    .card { transition: all 0.3s ease; }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pepe's Grill House</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --A:#dc2626; /* RED */
+  --BG:#020617;
+  --LT:#f3f4f6;
+  --SRF:#0f172a;
+}
+
+body{
+  margin:0;
+  font-family:'DM Sans',sans-serif;
+  background:var(--BG);
+  color:var(--LT);
+}
+
+h1,h2{
+  font-family:'Playfair Display',serif;
+}
+
+.nav{
+  position:fixed;
+  width:100%;
+  top:0;
+  background:rgba(2,6,23,.9);
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  z-index:100;
+}
+
+.btn{
+  background:var(--A);
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  color:white;
+}
+
+.hero{
+  text-align:center;
+  padding-top:120px;
+}
+
+.section{
+  padding:60px 20px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.card{
+  background:var(--SRF);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+</style>
 </head>
-<body class="bg-[#020617] text-zinc-100">
 
-  <!-- NAV -->
-  <nav class="fixed top-0 w-full bg-[#020617]/95 backdrop-blur-xl border-b border-white/10 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <div onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})" 
-           class="title-font text-2xl font-bold cursor-pointer">
-        Pepe's <span class="accent">Grill House</span>
-      </div>
-      
-      <div class="hidden md:flex gap-8 text-sm">
-        <a href="#menu" class="hover:text-rose-500 transition">Μενού</a>
-        <a href="#quality" class="hover:text-rose-500 transition">Ποιότητα</a>
-        <a href="#reviews" class="hover:text-rose-500 transition">Κριτικές</a>
-        <a href="#info" class="hover:text-rose-500 transition">Βρείτε μας</a>
-      </div>
+<body>
 
-      <button onclick="toggleCart()" class="relative w-11 h-11 bg-rose-600 rounded-full flex items-center justify-center hover:scale-105 transition">
-        <i class="fas fa-shopping-cart text-lg"></i>
-        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-      </button>
-    </div>
-  </nav>
+<div class="nav">
+  <div>Pepe's <span style="color:var(--A)">Grill House</span></div>
+  <button class="btn">Order</button>
+</div>
 
-  <!-- HERO -->
-  <section id="hero" class="min-h-screen flex items-center justify-center text-center pt-16 px-6"
-           style="background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(225,29,72,0.15) 0%, transparent 65%)">
-    <div>
-      <div class="inline-flex items-center gap-2 px-5 py-2 border border-rose-500/30 rounded-full text-sm mb-6">
-        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-        ΑΝΟΙΚΤΑ ΤΩΡΑ — Νέα Λάμψακος
-      </div>
-      <h1 class="title-font text-6xl md:text-7xl font-black leading-tight mb-6">
-        The Art of<br><span class="accent">Greek Grill</span>
-      </h1>
-      <p class="max-w-md mx-auto text-zinc-400 text-lg mb-10">
-        Χειροποίητος γύρος, τοπικά υλικά και το μυστικό μας καρύκευμα 15 ετών.
-      </p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a href="#menu" class="btn-accent px-10 py-4 rounded-2xl font-semibold text-lg">Δείτε το Μενού</a>
-        <button onclick="toggleCart()" class="border border-zinc-600 hover:border-rose-500 px-8 py-4 rounded-2xl font-semibold flex items-center gap-3">
-          <i class="fas fa-shopping-cart"></i> Παράγγειλε τώρα
-        </button>
-      </div>
-    </div>
-  </section>
+<div class="hero">
+  <h1>Greek Grill Experience</h1>
+  <p>Παραδοσιακό ελληνικό φαγητό με αυθεντική γεύση</p>
+</div>
 
-  <!-- MENU SECTION -->
-  <section id="menu" class="py-20 px-6 max-w-7xl mx-auto">
-    <div class="text-center mb-12">
-      <h2 class="title-font text-5xl font-bold">Το Μενού μας</h2>
-      <p class="text-rose-500 mt-2">Δημοκρατίας 53, Νέα Λάμψακος</p>
-    </div>
+<div class="section">
+  <h2>Μενού</h2>
 
-    <div id="tabs" class="flex justify-center gap-8 border-b border-white/10 mb-10 overflow-x-auto pb-2"></div>
-    
-    <div id="menu-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  </section>
+  <h3>Γύρος</h3>
+  <div class="card">Πίτα Γύρος — 4.20€</div>
+  <div class="card">Πίτα Γύρος Κοτόπουλο — 4.50€</div>
+  <div class="card">Μερίδα Γύρος — 8.50€</div>
+  <div class="card">Μερίδα Γύρος Κοτόπουλο — 8.80€</div>
+  <div class="card">Διπλή Πίτα Γύρος — 6.00€</div>
 
-  <!-- QUALITY -->
-  <section id="quality" class="py-20 bg-zinc-950 border-t border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="title-font text-5xl font-bold mb-4">Η Ποιότητά μας</h2>
-      <div class="grid md:grid-cols-4 gap-8 mt-12">
-        <!-- Same quality cards as before, you can expand if needed -->
-        <div class="card bg-zinc-900 p-8 rounded-3xl">🔥 Χειροποίητο κρέας καθημερινά</div>
-        <div class="card bg-zinc-900 p-8 rounded-3xl">🌿 Τοπικά φρέσκα υλικά</div>
-        <div class="card bg-zinc-900 p-8 rounded-3xl">🏆 Μυστικό καρύκευμα 15 ετών</div>
-        <div class="card bg-zinc-900 p-8 rounded-3xl">🔥 Ψήσιμο σε πραγματικό κάρβουνο</div>
-      </div>
-    </div>
-  </section>
+  <h3>Μερίδες</h3>
+  <div class="card">Σουβλάκι Χοιρινό ×2 — 3.60€</div>
+  <div class="card">Σουβλάκι Κοτόπουλο ×2 — 3.60€</div>
+  <div class="card">Μικτή Μερίδα — 12.50€</div>
+  <div class="card">Παϊδάκια Αρνίσια ×3 — 14.50€</div>
+  <div class="card">Πατάτες Τηγανητές — 3.00€</div>
 
-  <!-- REVIEWS & INFO (simplified but kept structure) -->
-  <section id="info" class="py-20 px-6 max-w-7xl mx-auto">
-    <div class="grid md:grid-cols-2 gap-12">
-      <div class="bg-zinc-900 rounded-3xl p-10">
-        <h3 class="text-2xl font-semibold mb-6">📍 Τοποθεσία</h3>
-        <p class="text-xl">Δημοκρατίας 53</p>
-        <p class="text-zinc-400">Νέα Λάμψακος</p>
-        <a href="tel:6945590872" class="block mt-8 text-3xl font-bold accent hover:underline">694 559 0872</a>
-      </div>
-      <div class="bg-zinc-900 rounded-3xl p-10">
-        <h3 class="text-2xl font-semibold mb-6">🕒 Ώρες Λειτουργίας</h3>
-        <p>Δευ-Πέμ: 12:00 – 23:00</p>
-        <p>Παρ-Σάβ: 12:00 – 00:00</p>
-        <p>Κυριακή: 12:00 – 22:00</p>
-      </div>
-    </div>
-  </section>
+  <h3>Σαλάτες</h3>
+  <div class="card">Χωριάτικη Σαλάτα — 5.50€</div>
+  <div class="card">Τζατζίκι — 3.00€</div>
+  <div class="card">Λαχανοσαλάτα — 2.50€</div>
+  <div class="card">Ταραμοσαλάτα — 3.50€</div>
 
-  <!-- CART MODAL (kept almost identical logic) -->
-  <div id="cart-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-end">
-    <div class="bg-[#0f172a] w-full max-w-md h-full overflow-auto">
-      <div class="p-6 border-b border-white/10 flex justify-between sticky top-0 bg-[#0f172a]">
-        <h2 class="text-2xl font-bold" id="modal-title">Το Καλάθι σας</h2>
-        <button onclick="toggleCart()" class="text-4xl leading-none">×</button>
-      </div>
-      
-      <div id="cart-content" class="p-6"></div>
-      
-      <div class="p-6 border-t border-white/10 sticky bottom-0 bg-[#0f172a]">
-        <div class="flex justify-between text-xl mb-6">
-          <span>Σύνολο</span>
-          <span id="total-price" class="accent font-bold">0.00€</span>
-        </div>
-        <button onclick="checkout()" 
-                class="btn-accent w-full py-5 rounded-2xl text-lg font-semibold">
-          Ολοκλήρωση & Αποστολή μέσω WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
+  <h3>Ποτά</h3>
+  <div class="card">Coca-Cola — 2.00€</div>
+  <div class="card">Νερό — 1.00€</div>
+  <div class="card">Μπύρα Mythos — 3.00€</div>
+  <div class="card">Φρέσκος Χυμός Πορτοκάλι — 3.50€</div>
+  <div class="card">Λεμονάδα Σπιτική — 2.50€</div>
+</div>
 
-  <script>
-    const WHATSAPP = "306945590872";
-    let cart = [];
-    let currentCategory = "Gyros";
+<div class="section">
+  <h2>Αξιολογήσεις</h2>
+  <div class="card">"Το καλύτερο γύρο στην Αθήνα!"</div>
+  <div class="card">"Απίστευτη ποιότητα και γεύση."</div>
+</div>
 
-    const menuData = {
-      Gyros: [
-        { id: 1, name: "Gyros Pita", price: 4.20, desc: "Κλασικός χοιρινός γύρος σε ζεστή πίτα με τζατζίκι, ντομάτα & κρεμμύδι" },
-        { id: 2, name: "Chicken Gyros Pita", price: 4.50, desc: "Μαριναρισμένο κοτόπουλο με σκόρδο σως" },
-        { id: 3, name: "Gyros Plate", price: 8.50, desc: "Μεγάλη μερίδα χοιρινού γύρου με πατάτες και τζατζίκι" },
-        { id: 5, name: "Double Gyros Pita", price: 6.00, desc: "Διπλή μερίδα για δυνατή όρεξη" },
-      ],
-      Portions: [
-        { id: 6, name: "Pork Souvlaki ×2", price: 3.60, desc: "Δύο σουβλάκια χοιρινό" },
-        { id: 7, name: "Chicken Souvlaki ×2", price: 3.60, desc: "Δύο σουβλάκια κοτόπουλο" },
-        { id: 8, name: "Mixed Grill", price: 12.50, desc: "Μεικτός δίσκος με όλα τα καλά" },
-        { id: 10, name: "French Fries", price: 3.00, desc: "Χρυσές πατάτες με ρίγανη" },
-      ],
-      Salads: [
-        { id: 11, name: "Greek Salad", price: 5.50, desc: "Χωριάτικη με φέτα και ελαιόλαδο" },
-        { id: 12, name: "Tzatziki", price: 3.00, desc: "Σπιτικό τζατζίκι" },
-      ],
-      Drinks: [
-        { id: 15, name: "Coca-Cola", price: 2.00, desc: "Κουτί 330ml" },
-        { id: 16, name: "Still Water", price: 1.00, desc: "500ml" },
-      ]
-    };
-
-    function renderTabs() {
-      const tabs = document.getElementById("tabs");
-      tabs.innerHTML = Object.keys(menuData).map(cat => `
-        <button onclick="switchCategory('${cat}')" 
-                class="pb-4 px-6 text-lg font-medium border-b-2 transition ${currentCategory === cat ? 'border-rose-600 text-rose-600' : 'border-transparent text-zinc-400'}">
-          ${cat}
-        </button>
-      `).join('');
-    }
-
-    function renderMenu() {
-      const grid = document.getElementById("menu-grid");
-      grid.innerHTML = menuData[currentCategory].map(item => `
-        <div class="card bg-zinc-900 border border-white/10 rounded-3xl p-6">
-          <h3 class="title-font text-xl font-bold mb-2">${item.name}</h3>
-          <p class="text-zinc-400 text-sm mb-6">${item.desc}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-3xl font-bold accent">${item.price.toFixed(2)}€</span>
-            <button onclick="addToCart(${item.id})" 
-                    class="btn-accent px-6 py-3 rounded-2xl font-medium">Προσθήκη</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function switchCategory(cat) {
-      currentCategory = cat;
-      renderTabs();
-      renderMenu();
-    }
-
-    function addToCart(id) {
-      const allItems = Object.values(menuData).flat();
-      const item = allItems.find(i => i.id === id);
-      const exist = cart.find(i => i.id === id);
-      if (exist) exist.qty += 1;
-      else cart.push({...item, qty: 1});
-      
-      updateCartCount();
-    }
-
-    function updateCartCount() {
-      document.getElementById("cart-count").textContent = cart.reduce((a, i) => a + i.qty, 0);
-    }
-
-    function toggleCart() {
-      const modal = document.getElementById("cart-modal");
-      modal.classList.toggle("hidden");
-      if (!modal.classList.contains("hidden")) renderCart();
-    }
-
-    function renderCart() {
-      let html = '';
-      let total = 0;
-      
-      cart.forEach(item => {
-        const itemTotal = item.price * item.qty;
-        total += itemTotal;
-        html += `
-          <div class="flex justify-between items-center py-4 border-b border-white/10">
-            <div>
-              <p>${item.name}</p>
-              <p class="text-rose-500">${itemTotal.toFixed(2)}€</p>
-            </div>
-            <div class="flex items-center gap-4">
-              <button onclick="changeQty(${item.id}, -1)" class="w-8 h-8 border border-white/30 rounded-xl">-</button>
-              <span class="w-6 text-center">${item.qty}</span>
-              <button onclick="changeQty(${item.id}, 1)" class="w-8 h-8 bg-rose-600 rounded-xl">+</button>
-            </div>
-          </div>`;
-      });
-
-      document.getElementById("cart-content").innerHTML = html || `<p class="text-center text-zinc-400 py-12">Το καλάθι είναι άδειο</p>`;
-      document.getElementById("total-price").textContent = total.toFixed(2) + "€";
-    }
-
-    function changeQty(id, delta) {
-      const item = cart.find(i => i.id === id);
-      if (item) {
-        item.qty += delta;
-        if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-      }
-      renderCart();
-      updateCartCount();
-    }
-
-    function checkout() {
-      if (cart.length === 0) return;
-      
-      let text = "🔥 *ΠΑΡΑΓΓΕΛΙΑ — Pepe's Grill House*%0A%0A";
-      text += `*Όνομα:* %0A`;
-      text += `*Διεύθυνση:* %0A`;
-      text += `*Τηλέφωνο:* 6945590872%0A%0A`;
-      text += `*Παραγγελία:*%0A`;
-      
-      cart.forEach(item => {
-        text += `• ${item.name} ×${item.qty} → ${(item.price * item.qty).toFixed(2)}€%0A`;
-      });
-      
-      const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-      text += `%0A*Σύνολο: ${total.toFixed(2)}€*`;
-      
-      window.open(`https://wa.me/${WHATSAPP}?text=${text}`, "_blank");
-      
-      alert("Η παραγγελία άνοιξε στο WhatsApp!");
-      cart = [];
-      updateCartCount();
-      toggleCart();
-    }
-
-    // Init
-    window.onload = () => {
-      renderTabs();
-      renderMenu();
-    };
-  </script>
 </body>
 </html>
