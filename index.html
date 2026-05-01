@@ -1,119 +1,1399 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Pepe's Grill House</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
 :root{
-  --A:#dc2626; /* RED */
-  --BG:#020617;
-  --LT:#f3f4f6;
-  --SRF:#0f172a;
+  --bg:      #08070c;
+  --bg2:     #0f0e16;
+  --bg3:     #161422;
+  --red:     #c0392b;
+  --red-h:   #e74c3c;
+  --red-lo:  rgba(192,57,43,.12);
+  --red-lo2: rgba(192,57,43,.22);
+  --text:    #ede8e0;
+  --muted:   rgba(237,232,224,.45);
+  --border:  rgba(237,232,224,.08);
+  --border2: rgba(192,57,43,.30);
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'Outfit', system-ui, sans-serif;
+  --r:       16px;
+  --r2:      22px;
 }
 
-body{
-  margin:0;
-  font-family:'DM Sans',sans-serif;
-  background:var(--BG);
-  color:var(--LT);
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+body.no-scroll{overflow:hidden}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:var(--sans)}
+a{color:inherit;text-decoration:none}
+input,textarea,select{font-family:var(--sans)}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(192,57,43,.45);border-radius:99px}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.55)}65%{box-shadow:0 0 0 11px rgba(192,57,43,0)}}
+@keyframes breathe{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes tabLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.fu{opacity:0;animation:fadeUp .7s ease forwards}
+.fu-1{animation-delay:.06s}.fu-2{animation-delay:.18s}.fu-3{animation-delay:.30s}
+.fu-4{animation-delay:.42s}.fu-5{animation-delay:.56s}
+
+/* ═══════════════════════════════════════
+   NOISE OVERLAY
+═══════════════════════════════════════ */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  background-size:220px;opacity:.4;
 }
 
-h1,h2{
-  font-family:'Playfair Display',serif;
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(8,7,12,.88);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
 }
-
-.nav{
-  position:fixed;
-  width:100%;
-  top:0;
-  background:rgba(2,6,23,.9);
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-  z-index:100;
+.nav-inner{
+  max-width:1300px;margin:0 auto;padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;height:66px;
 }
-
-.btn{
-  background:var(--A);
-  border:none;
-  padding:10px 20px;
-  border-radius:10px;
-  cursor:pointer;
-  color:white;
+.logo{background:none;border:none;display:flex;align-items:baseline;gap:6px}
+.logo-text{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--text);letter-spacing:.01em}
+.logo-text span{color:var(--red)}
+.nav-links{display:flex;gap:34px}
+.nav-link{
+  background:none;border:none;font-size:13px;font-weight:500;letter-spacing:.04em;
+  color:var(--muted);transition:color .2s;padding:4px 0;
 }
+.nav-link:hover{color:var(--red)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.cart-btn{
+  position:relative;width:44px;height:44px;border-radius:50%;
+  background:var(--red);border:none;
+  display:flex;align-items:center;justify-content:center;
+  animation:pulseRed 2.4s infinite;transition:background .2s,transform .15s;
+}
+.cart-btn:hover{background:var(--red-h);transform:scale(1.07)}
+.cart-btn svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cart-count{
+  position:absolute;top:-4px;right:-4px;
+  background:#fff;color:var(--red);border-radius:50%;
+  width:19px;height:19px;font-size:10px;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+}
+.cart-count.show{display:flex}
+.hamburger{
+  background:none;border:none;width:40px;height:40px;
+  display:none;align-items:center;justify-content:center;
+  color:var(--text);flex-direction:column;gap:5px;
+}
+.hamburger span{display:block;width:22px;height:2px;background:currentColor;transition:all .25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{
+  display:none;background:rgba(8,7,12,.97);
+  border-top:1px solid var(--border);padding:12px 28px 20px;
+}
+.mobile-menu.open{display:block}
+.mobile-menu button{
+  display:block;width:100%;text-align:left;padding:13px 0;
+  background:none;border:none;color:rgba(237,232,224,.75);font-size:16px;
+  border-bottom:1px solid var(--border);transition:color .2s;
+}
+.mobile-menu button:last-child{border:none}
+.mobile-menu button:hover{color:var(--red)}
 
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
 .hero{
-  text-align:center;
-  padding-top:120px;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:130px 28px 90px;
+  position:relative;
+  background:radial-gradient(ellipse 75% 55% at 50% -5%, rgba(192,57,43,.17) 0%, transparent 65%);
 }
-
-.section{
-  padding:60px 20px;
-  max-width:1100px;
-  margin:auto;
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
 }
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 18px;border-radius:99px;
+  border:1px solid rgba(192,57,43,.38);
+  color:var(--red);font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:26px;
+}
+.badge-dot{
+  width:8px;height:8px;border-radius:50%;background:#22c55e;
+  animation:breathe 2s ease-in-out infinite;
+}
+.badge-dot.closed{background:#f87171;animation:none}
+.hero-title{
+  font-family:var(--serif);
+  font-size:clamp(3.4rem,11vw,9rem);
+  font-weight:700;line-height:1.02;
+  margin-bottom:24px;
+  background:linear-gradient(160deg, var(--text) 0%, rgba(237,232,224,.55) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-title em{color:var(--red);-webkit-text-fill-color:var(--red);font-style:italic}
+.hero-sub{
+  max-width:520px;color:var(--muted);font-size:17px;
+  line-height:1.8;font-weight:300;margin-bottom:44px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:90px}
+.btn-primary{
+  padding:14px 36px;border-radius:var(--r);
+  background:var(--red);color:#fff;border:none;font-weight:600;font-size:15px;
+  transition:background .18s,transform .15s,box-shadow .18s;
+  box-shadow:0 0 0 0 rgba(192,57,43,.4);
+}
+.btn-primary:hover{background:var(--red-h);transform:scale(1.02);box-shadow:0 8px 28px rgba(192,57,43,.35)}
+.btn-outline{
+  padding:14px 36px;border-radius:var(--r);
+  background:transparent;color:var(--text);
+  border:1px solid rgba(237,232,224,.18);font-weight:500;font-size:15px;
+  display:flex;align-items:center;gap:8px;
+  transition:border-color .2s,background .2s;
+}
+.btn-outline:hover{border-color:rgba(192,57,43,.5);background:var(--red-lo)}
+.hero-stats{display:flex;gap:56px;flex-wrap:wrap;justify-content:center}
+.stat-val{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--red)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.06em}
 
-.card{
-  background:var(--SRF);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:10px;
+/* ═══════════════════════════════════════
+   SECTIONS COMMON
+═══════════════════════════════════════ */
+section{padding:96px 28px;position:relative}
+.container{max-width:1300px;margin:0 auto}
+.section-eyebrow{
+  color:var(--red);font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;
+}
+.section-title{
+  font-family:var(--serif);
+  font-size:clamp(2rem,5vw,3.6rem);font-weight:700;
+  margin-bottom:14px;line-height:1.1;
+}
+.section-sub{color:var(--muted);font-size:16px;line-height:1.75;max-width:480px}
+.section-header{margin-bottom:60px}
+.section-header.center{text-align:center}
+.section-header.center .section-sub{margin:0 auto}
+
+/* ═══════════════════════════════════════
+   MENU
+═══════════════════════════════════════ */
+#menu{border-top:1px solid var(--border)}
+.tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  margin-bottom:48px;overflow-x:auto;gap:0;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  position:relative;padding:12px 28px 16px;
+  background:none;border:none;font-size:14px;font-weight:500;
+  color:var(--muted);white-space:nowrap;transition:color .2s;
+}
+.tab-btn::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--red);transform:scaleX(0);transform-origin:center;
+  transition:transform .24s ease;
+}
+.tab-btn:hover{color:rgba(237,232,224,.8)}
+.tab-btn.active{color:var(--red)}
+.tab-btn.active::after{transform:scaleX(1)}
+.menu-panel{display:none}
+.menu-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.menu-card{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--border);border-radius:var(--r2);
+  padding:24px;display:flex;flex-direction:column;
+  transition:transform .22s ease,border-color .22s ease;
+  position:relative;
+}
+.menu-card:hover{transform:translateY(-3px);border-color:rgba(192,57,43,.35)}
+.card-badge{
+  position:absolute;top:16px;right:16px;
+  background:var(--red-lo2);color:var(--red);
+  font-size:10px;font-weight:700;padding:3px 10px;
+  border-radius:99px;letter-spacing:.07em;text-transform:uppercase;
+}
+.card-name{
+  font-family:var(--serif);font-size:19px;font-weight:700;
+  margin-bottom:8px;line-height:1.3;
+}
+.card-desc{color:var(--muted);font-size:13px;line-height:1.7;flex:1}
+.nutrition-toggle{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:none;color:rgba(237,232,224,.3);
+  font-size:11px;margin-top:14px;padding:0;transition:color .2s;
+}
+.nutrition-toggle:hover{color:var(--muted)}
+.nutrition-toggle svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.nutrition-box{
+  margin-top:10px;padding:12px 14px;
+  background:var(--red-lo);border:1px solid var(--red-lo2);
+  border-radius:10px;display:none;
+}
+.nutrition-box.open{display:block}
+.nutrition-box p{font-size:12px;color:rgba(237,232,224,.6);line-height:1.8}
+.nutrition-box strong{color:var(--red)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.card-price{font-family:var(--serif);font-size:25px;font-weight:700;color:var(--red)}
+.add-btn{
+  padding:9px 20px;border-radius:10px;
+  background:var(--red);color:#fff;border:none;
+  font-size:13px;font-weight:600;
+  transition:background .18s,transform .15s;
+}
+.add-btn:hover{background:var(--red-h);transform:scale(1.03)}
+.qty-ctrl{display:flex;align-items:center;gap:10px}
+.qty-btn{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(192,57,43,.45);background:transparent;
+  color:var(--red);font-size:15px;transition:background .15s,border-color .15s;
+}
+.qty-btn.plus{background:var(--red);border-color:var(--red);color:#fff}
+.qty-btn:hover{border-color:var(--red);background:var(--red-lo)}
+.qty-btn.plus:hover{background:var(--red-h)}
+.qty-num{font-size:15px;font-weight:700;min-width:20px;text-align:center}
+
+/* ═══════════════════════════════════════
+   QUALITY
+═══════════════════════════════════════ */
+#quality{
+  background:linear-gradient(180deg,rgba(192,57,43,.06) 0%,transparent 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.quality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;margin-top:60px}
+.quality-card{
+  padding:32px;border-radius:var(--r2);
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+  transition:transform .22s,border-color .22s;
+}
+.quality-card:hover{transform:translateY(-3px);border-color:rgba(192,57,43,.32)}
+.quality-icon{
+  width:54px;height:54px;border-radius:14px;
+  background:var(--red-lo);display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+}
+.quality-icon svg{width:26px;height:26px;stroke:var(--red);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.quality-card h3{font-family:var(--serif);font-size:19px;font-weight:700;margin-bottom:10px;line-height:1.35}
+.quality-card p{color:var(--muted);font-size:14px;line-height:1.75}
+
+/* ═══════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════ */
+#reviews{border-top:1px solid var(--border)}
+.review-wrap{max-width:860px;margin:0 auto}
+.review-card{
+  background:rgba(255,255,255,.025);border:1px solid var(--border);
+  border-radius:28px;padding:50px 46px 40px;text-align:center;
+  animation:fadeIn .35s ease;
+}
+.stars{display:flex;justify-content:center;gap:5px;margin-bottom:28px}
+.stars svg{width:22px;height:22px;fill:var(--red);stroke:var(--red)}
+.review-text{
+  font-family:var(--serif);font-size:clamp(1.1rem,2.5vw,1.35rem);
+  line-height:1.8;font-style:italic;color:rgba(237,232,224,.85);
+  margin-bottom:30px;
+}
+.review-author{font-weight:600;font-size:15px;margin-bottom:4px}
+.review-meta{color:var(--muted);font-size:13px}
+.review-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:32px}
+.review-arrow{
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(237,232,224,.15);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);transition:border-color .2s,background .2s;
+}
+.review-arrow:hover{border-color:rgba(192,57,43,.5);background:var(--red-lo)}
+.review-arrow svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+.review-dot{
+  height:8px;border-radius:99px;border:none;padding:0;
+  background:rgba(237,232,224,.2);cursor:pointer;
+  transition:all .28s ease;
+}
+.review-dot.active{width:26px !important;background:var(--red)}
+
+/* ═══════════════════════════════════════
+   INFO
+═══════════════════════════════════════ */
+#info{border-top:1px solid var(--border)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:60px}
+.info-card{
+  padding:30px;border-radius:var(--r2);
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+}
+.info-card-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:15px;font-weight:600;margin-bottom:20px;
+}
+.info-card-title svg{width:19px;height:19px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.map-placeholder{
+  min-height:220px;border-radius:var(--r2);
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;padding:36px;text-align:center;
+}
+.map-icon-wrap{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--red-lo);display:flex;align-items:center;justify-content:center;
+}
+.map-icon-wrap svg{width:30px;height:30px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.maps-btn{
+  padding:10px 22px;border-radius:10px;
+  border:1px solid rgba(237,232,224,.18);background:transparent;
+  color:var(--text);font-size:13px;display:flex;align-items:center;gap:6px;
+  transition:border-color .2s,background .2s;
+}
+.maps-btn:hover{border-color:rgba(192,57,43,.5);background:var(--red-lo)}
+.maps-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.hours-row{
+  display:flex;justify-content:space-between;
+  padding:9px 0;border-top:1px solid var(--border);font-size:13px;
+}
+.hours-row:first-child{border-top:none}
+.hours-day{color:var(--muted)}
+.hours-time{font-weight:600}
+.live-badge{
+  margin-left:auto;padding:4px 12px;border-radius:99px;
+  font-size:10px;font-weight:800;letter-spacing:.07em;
+}
+.live-badge.open{background:rgba(74,222,128,.13);color:#4ade80}
+.live-badge.closed{background:rgba(248,113,113,.13);color:#f87171}
+.phone-num{color:var(--muted);font-size:15px;font-weight:500;margin-bottom:18px}
+.wa-btn{
+  width:100%;padding:13px;border-radius:var(--r);
+  background:var(--red);color:#fff;border:none;
+  font-size:14px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .18s;
+}
+.wa-btn:hover{background:var(--red-h)}
+.wa-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  border-top:1px solid var(--border);
+  padding:36px 28px;text-align:center;
+}
+.footer-logo{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:8px}
+.footer-logo span{color:var(--red)}
+.footer-copy{color:var(--muted);font-size:13px}
+
+/* ═══════════════════════════════════════
+   CART DRAWER
+═══════════════════════════════════════ */
+.cart-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(6px);
+  display:none;justify-content:flex-end;animation:fadeIn .22s ease;
+}
+.cart-overlay.open{display:flex}
+.cart-drawer{
+  width:100%;max-width:480px;height:100%;
+  background:var(--bg2);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  animation:slideIn .28s cubic-bezier(.22,1,.36,1);
+}
+.cart-header{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--bg2);z-index:1;
+}
+.cart-title{font-family:var(--serif);font-size:21px;font-weight:700}
+.cart-sub{color:var(--muted);font-size:13px;margin-top:2px}
+.close-btn{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:border-color .2s,color .2s;
+}
+.close-btn:hover{border-color:rgba(192,57,43,.4);color:var(--red)}
+.close-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.cart-body{flex:1;overflow-y:auto;padding:16px 24px}
+.cart-empty{
+  text-align:center;padding:80px 20px;
+  color:rgba(237,232,224,.3);
+}
+.cart-empty svg{width:54px;height:54px;stroke:currentColor;fill:none;stroke-width:1.5;
+  margin:0 auto 18px;display:block;opacity:.4}
+.cart-empty p{font-size:15px;line-height:1.8}
+.cart-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:14px;font-weight:500;margin-bottom:4px}
+.cart-item-price{color:var(--red);font-size:14px;font-weight:700}
+.cart-item-del{
+  background:none;border:none;
+  color:rgba(237,232,224,.28);
+  display:flex;padding:4px;transition:color .2s;
+}
+.cart-item-del:hover{color:var(--red)}
+.cart-item-del svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.cart-footer{padding:20px 24px;border-top:1px solid var(--border)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-total-lbl{color:var(--muted);font-size:14px}
+.cart-total-val{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--red)}
+.checkout-btn{
+  width:100%;padding:14px;border-radius:var(--r);
+  background:var(--red);color:#fff;border:none;
+  font-size:15px;font-weight:600;
+  transition:background .18s;
+}
+.checkout-btn:hover{background:var(--red-h)}
+
+/* ═══════════════════════════════════════
+   CHECKOUT FORM
+═══════════════════════════════════════ */
+.checkout-summary{
+  padding:16px 18px;border-radius:14px;
+  background:var(--red-lo);border:1px solid var(--red-lo2);
+  margin-bottom:26px;
+}
+.checkout-summary-label{
+  font-size:11px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--red);margin-bottom:12px;
+}
+.summary-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.summary-row span:first-child{color:var(--muted)}
+.summary-row span:last-child{font-weight:600}
+.summary-total-row{
+  display:flex;justify-content:space-between;
+  padding-top:10px;margin-top:8px;
+  border-top:1px solid var(--red-lo2);
+}
+.summary-total-row span:first-child{font-weight:700;font-size:14px}
+.summary-total-row span:last-child{font-weight:800;font-size:18px;color:var(--red)}
+.form-group{margin-bottom:16px}
+.form-label{
+  display:block;font-size:11px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(237,232,224,.38);margin-bottom:7px;
+}
+.form-input-wrap{position:relative}
+.form-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  color:rgba(237,232,224,.3);pointer-events:none;
+}
+.form-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.form-input{
+  width:100%;padding:12px 12px 12px 38px;border-radius:10px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(237,232,224,.12);
+  color:var(--text);font-size:14px;outline:none;
+  transition:border-color .2s;
+}
+.form-input:focus{border-color:rgba(192,57,43,.55)}
+.form-textarea{
+  width:100%;padding:12px;border-radius:10px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(237,232,224,.12);
+  color:var(--text);font-size:14px;outline:none;
+  resize:vertical;min-height:82px;line-height:1.6;
+  transition:border-color .2s;
+}
+.form-textarea:focus{border-color:rgba(192,57,43,.55)}
+.send-btn{
+  width:100%;padding:14px;border-radius:var(--r);
+  background:var(--red);color:#fff;border:none;
+  font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:background .18s,opacity .18s;
+}
+.send-btn:hover{background:var(--red-h)}
+.send-btn:disabled{opacity:.45;cursor:not-allowed}
+.send-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.back-btn{
+  width:100%;padding:11px;border-radius:var(--r);
+  background:transparent;border:1px solid var(--border);
+  color:var(--text);font-size:14px;margin-top:10px;
+  transition:border-color .2s,background .2s;
+}
+.back-btn:hover{border-color:rgba(192,57,43,.4);background:var(--red-lo)}
+
+/* ═══════════════════════════════════════
+   ORDER SENT
+═══════════════════════════════════════ */
+.order-sent{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px;text-align:center;
+}
+.order-sent svg{width:62px;height:62px;stroke:#22c55e;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;margin-bottom:22px}
+.order-sent h3{font-family:var(--serif);font-size:23px;margin-bottom:12px}
+.order-sent p{color:var(--muted);font-size:15px;line-height:1.75}
+
+/* ═══════════════════════════════════════
+   SCREEN STATES
+═══════════════════════════════════════ */
+.screen{display:none;flex:1;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .review-card{padding:36px 24px 30px}
+  .hero-stats{gap:32px}
+}
+@media(max-width:500px){
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-primary,.btn-outline{width:100%;max-width:280px;justify-content:center}
 }
 </style>
 </head>
-
 <body>
 
-<div class="nav">
-  <div>Pepe's <span style="color:var(--A)">Grill House</span></div>
-  <button class="btn">Order</button>
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <div class="nav-inner">
+    <button class="logo" onclick="smoothScroll('hero')">
+      <span class="logo-text">Pepe's <span>Grill House</span></span>
+    </button>
+    <div class="nav-links">
+      <button class="nav-link" onclick="smoothScroll('menu')">Μενού</button>
+      <button class="nav-link" onclick="smoothScroll('quality')">Ποιότητά μας</button>
+      <button class="nav-link" onclick="smoothScroll('reviews')">Κριτικές</button>
+      <button class="nav-link" onclick="smoothScroll('info')">Βρείτε μας</button>
+    </div>
+    <div class="nav-right">
+      <button class="cart-btn" id="cartBtn" onclick="openCart()">
+        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="smoothScroll('menu')">Μενού</button>
+    <button onclick="smoothScroll('quality')">Ποιότητά μας</button>
+    <button onclick="smoothScroll('reviews')">Κριτικές</button>
+    <button onclick="smoothScroll('info')">Βρείτε μας</button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero" class="hero">
+  <div class="badge fu fu-1">
+    <span class="badge-dot" id="badgeDot"></span>
+    <span id="statusText">Ανοιχτά τώρα</span>
+    &nbsp;·&nbsp; Grill από το 2009
+  </div>
+  <h1 class="hero-title fu fu-2">
+    Η Τέχνη της<br/><em>Ελληνικής Σχάρας</em>
+  </h1>
+  <p class="hero-sub fu fu-3">
+    Χειροποίητο κρέας, τοπικά υλικά και ένα μυστικό dry rub
+    τελειοποιημένο επί 15 χρόνια. Αυτό είναι το Pepe's.
+  </p>
+  <div class="hero-btns fu fu-4">
+    <button class="btn-primary" onclick="smoothScroll('menu')">Δείτε το Μενού</button>
+    <button class="btn-outline" onclick="openCart()">
+      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Παραγγείλτε Τώρα
+    </button>
+  </div>
+  <div class="hero-stats fu fu-5">
+    <div><div class="stat-val">15+</div><div class="stat-lbl">Χρόνια Φωτιάς</div></div>
+    <div><div class="stat-val">500+</div><div class="stat-lbl">Εβδ. Παραγγελίες</div></div>
+    <div><div class="stat-val">4.9 ★</div><div class="stat-lbl">Μέση Βαθμολογία</div></div>
+  </div>
+</section>
+
+<!-- ══════════ MENU ══════════ -->
+<section id="menu">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Τι Σερβίρουμε</p>
+      <h2 class="section-title">Το Μενού μας</h2>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('gyros',this)">Γύρος</button>
+      <button class="tab-btn" onclick="switchTab('merides',this)">Μερίδες</button>
+      <button class="tab-btn" onclick="switchTab('salates',this)">Σαλάτες</button>
+      <button class="tab-btn" onclick="switchTab('pota',this)">Ποτά</button>
+    </div>
+
+    <!-- Γύρος -->
+    <div class="menu-panel active" id="panel-gyros">
+      <div class="menu-card" data-id="1" data-name="Γύρος Πίτα" data-price="4.20">
+        <span class="card-badge">Πιο Δημοφιλές</span>
+        <h3 class="card-name">Γύρος Πίτα</h3>
+        <p class="card-desc">Κλασικός χοιρινός γύρος σε ζεστή πίτα με τζατζίκι, φρέσκια ντομάτα & κρεμμύδι</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 520 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη, Γαλακτοκομικά</p></div>
+        <div class="card-footer">
+          <span class="card-price">4,20€</span>
+          <button class="add-btn" onclick="addItem(1,'Γύρος Πίτα',4.20,this)">Προσθήκη</button>
+        </div>
+      </div>
+      <div class="menu-card" data-id="2" data-name="Κοτόπουλο Γύρος Πίτα" data-price="4.50">
+        <h3 class="card-name">Κοτόπουλο Γύρος Πίτα</h3>
+        <p class="card-desc">Τρυφερό μαριναρισμένο κοτόπουλο σε πίτα με σκορδάτη σάλτσα & λαχανικά</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 480 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη, Γαλακτοκομικά</p></div>
+        <div class="card-footer">
+          <span class="card-price">4,50€</span>
+          <button class="add-btn" onclick="addItem(2,'Κοτόπουλο Γύρος Πίτα',4.50,this)">Προσθήκη</button>
+        </div>
+      </div>
+      <div class="menu-card" data-id="3" data-name="Γύρος Μερίδα" data-price="8.50">
+        <h3 class="card-name">Γύρος Μερίδα</h3>
+        <p class="card-desc">Γενναιόδωρη μερίδα χοιρινού γύρου με πίτα, χρυσαφένιες πατάτες & σπιτικό τζατζίκι</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 920 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη, Γαλακτοκομικά</p></div>
+        <div class="card-footer">
+          <span class="card-price">8,50€</span>
+          <button class="add-btn" onclick="addItem(3,'Γύρος Μερίδα',8.50,this)">Προσθήκη</button>
+        </div>
+      </div>
+      <div class="menu-card" data-id="4" data-name="Κοτ. Γύρος Μερίδα" data-price="8.80">
+        <h3 class="card-name">Κοτ. Γύρος Μερίδα</h3>
+        <p class="card-desc">Μερίδα κοτόπουλο γύρο με πίτα, τραγανές πατάτες & σκορδάτη σάλτσα</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 860 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη, Γαλακτοκομικά</p></div>
+        <div class="card-footer">
+          <span class="card-price">8,80€</span>
+          <button class="add-btn" onclick="addItem(4,'Κοτ. Γύρος Μερίδα',8.80,this)">Προσθήκη</button>
+        </div>
+      </div>
+      <div class="menu-card" data-id="5" data-name="Διπλός Γύρος Πίτα" data-price="6.00">
+        <span class="card-badge">Για Γενναίους</span>
+        <h3 class="card-name">Διπλός Γύρος Πίτα</h3>
+        <p class="card-desc">Διπλή μερίδα χοιρινού γύρου σε πίτα — για τους πραγματικά πεινασμένους</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 880 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη, Γαλακτοκομικά</p></div>
+        <div class="card-footer">
+          <span class="card-price">6,00€</span>
+          <button class="add-btn" onclick="addItem(5,'Διπλός Γύρος Πίτα',6.00,this)">Προσθήκη</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Μερίδες -->
+    <div class="menu-panel" id="panel-merides">
+      <div class="menu-card" data-id="6" data-name="Χοιρινό Σουβλάκι ×2" data-price="3.60">
+        <h3 class="card-name">Χοιρινό Σουβλάκι ×2</h3>
+        <p class="card-desc">Δύο σουβλάκια μαριναρισμένου χοιρινού ψητά σε πραγματικό κάρβουνο</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 310 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">3,60€</span>
+          <button class="add-btn" onclick="addItem(6,'Χοιρινό Σουβλάκι ×2',3.60,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="7" data-name="Κοτόπουλο Σουβλάκι ×2" data-price="3.60">
+        <h3 class="card-name">Κοτόπουλο Σουβλάκι ×2</h3>
+        <p class="card-desc">Δύο σουβλάκια χυμώδους κοτόπουλου, τέλεια ψημένα</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 280 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">3,60€</span>
+          <button class="add-btn" onclick="addItem(7,'Κοτόπουλο Σουβλάκι ×2',3.60,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="8" data-name="Mixed Grill" data-price="12.50">
+        <span class="card-badge">Αγαπημένο</span>
+        <h3 class="card-name">Mixed Grill</h3>
+        <p class="card-desc">Χοιρινό & κοτόπουλο σουβλάκι, παϊδάκι, γύρος & ψητές πιπεριές</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 1100 kcal<br/><strong>Αλλεργιογόνα:</strong> Γαλακτοκομικά</p></div>
+        <div class="card-footer"><span class="card-price">12,50€</span>
+          <button class="add-btn" onclick="addItem(8,'Mixed Grill',12.50,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="9" data-name="Αρνίσια Παϊδάκια ×3" data-price="14.50">
+        <span class="card-badge">Επιλογή Chef</span>
+        <h3 class="card-name">Αρνίσια Παϊδάκια ×3</h3>
+        <p class="card-desc">Εκλεκτά παϊδάκια με το μυστικό μας dry rub 15 χρόνων</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 680 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">14,50€</span>
+          <button class="add-btn" onclick="addItem(9,'Αρνίσια Παϊδάκια ×3',14.50,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="10" data-name="Τηγανητές Πατάτες" data-price="3.00">
+        <h3 class="card-name">Τηγανητές Πατάτες</h3>
+        <p class="card-desc">Τραγανές πατάτες με θαλασσινό αλάτι & ρίγανη</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 380 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη</p></div>
+        <div class="card-footer"><span class="card-price">3,00€</span>
+          <button class="add-btn" onclick="addItem(10,'Τηγανητές Πατάτες',3.00,this)">Προσθήκη</button></div>
+      </div>
+    </div>
+
+    <!-- Σαλάτες -->
+    <div class="menu-panel" id="panel-salates">
+      <div class="menu-card" data-id="11" data-name="Χωριάτικη Σαλάτα" data-price="5.50">
+        <h3 class="card-name">Χωριάτικη Σαλάτα</h3>
+        <p class="card-desc">Ντομάτα, αγγούρι, ελιές Καλαμών, φέτα & εξαιρετικό παρθένο ελαιόλαδο</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 280 kcal<br/><strong>Αλλεργιογόνα:</strong> Γαλακτοκομικά</p></div>
+        <div class="card-footer"><span class="card-price">5,50€</span>
+          <button class="add-btn" onclick="addItem(11,'Χωριάτικη Σαλάτα',5.50,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="12" data-name="Τζατζίκι" data-price="3.00">
+        <span class="card-badge">Σπιτικό</span>
+        <h3 class="card-name">Τζατζίκι</h3>
+        <p class="card-desc">Σπιτικό τζατζίκι με φρέσκο αγγούρι, ψητό σκόρδο & άνηθο</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 120 kcal<br/><strong>Αλλεργιογόνα:</strong> Γαλακτοκομικά</p></div>
+        <div class="card-footer"><span class="card-price">3,00€</span>
+          <button class="add-btn" onclick="addItem(12,'Τζατζίκι',3.00,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="13" data-name="Κόουλσλοου" data-price="2.50">
+        <h3 class="card-name">Κόουλσλοου</h3>
+        <p class="card-desc">Φρέσκο λάχανο & καρότο με κρεμώδες σπιτικό ντρέσινγκ</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 150 kcal<br/><strong>Αλλεργιογόνα:</strong> Γαλακτοκομικά, Αυγά</p></div>
+        <div class="card-footer"><span class="card-price">2,50€</span>
+          <button class="add-btn" onclick="addItem(13,'Κόουλσλοου',2.50,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="14" data-name="Ταραμοσαλάτα" data-price="3.50">
+        <span class="card-badge">Παραδοσιακό</span>
+        <h3 class="card-name">Ταραμοσαλάτα</h3>
+        <p class="card-desc">Παραδοσιακή ταραμοσαλάτα — φτιαγμένη φρέσκια κάθε πρωί</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 180 kcal<br/><strong>Αλλεργιογόνα:</strong> Ψάρι, Γλουτένη</p></div>
+        <div class="card-footer"><span class="card-price">3,50€</span>
+          <button class="add-btn" onclick="addItem(14,'Ταραμοσαλάτα',3.50,this)">Προσθήκη</button></div>
+      </div>
+    </div>
+
+    <!-- Ποτά -->
+    <div class="menu-panel" id="panel-pota">
+      <div class="menu-card" data-id="15" data-name="Coca-Cola" data-price="2.00">
+        <h3 class="card-name">Coca-Cola</h3>
+        <p class="card-desc">Κουτί 330ml, παγωμένη</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 140 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">2,00€</span>
+          <button class="add-btn" onclick="addItem(15,'Coca-Cola',2.00,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="16" data-name="Νερό" data-price="1.00">
+        <h3 class="card-name">Νερό</h3>
+        <p class="card-desc">Φυσικό μεταλλικό νερό 500ml</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 0 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">1,00€</span>
+          <button class="add-btn" onclick="addItem(16,'Νερό',1.00,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="17" data-name="Μύθος" data-price="3.00">
+        <h3 class="card-name">Μύθος</h3>
+        <p class="card-desc">Μπουκάλι 330ml παγωμένης ελληνικής μπύρας</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 148 kcal<br/><strong>Αλλεργιογόνα:</strong> Γλουτένη</p></div>
+        <div class="card-footer"><span class="card-price">3,00€</span>
+          <button class="add-btn" onclick="addItem(17,'Μύθος',3.00,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="18" data-name="Φρεσκοστυμμένος Χυμός" data-price="3.50">
+        <span class="card-badge">Φρέσκος</span>
+        <h3 class="card-name">Φρεσκοστυμμένος Χυμός</h3>
+        <p class="card-desc">Φρεσκοστυμμένος χυμός πορτοκάλι — χωρίς ζάχαρη</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 110 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">3,50€</span>
+          <button class="add-btn" onclick="addItem(18,'Φρεσκοστυμμένος Χυμός',3.50,this)">Προσθήκη</button></div>
+      </div>
+      <div class="menu-card" data-id="19" data-name="Σπιτική Λεμονάδα" data-price="2.50">
+        <span class="card-badge">Σπιτική</span>
+        <h3 class="card-name">Σπιτική Λεμονάδα</h3>
+        <p class="card-desc">Λεμονάδα με φρέσκο δυόσμο & ελληνικό μέλι</p>
+        <button class="nutrition-toggle" onclick="toggleNutrition(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Διατροφή & αλλεργιογόνα
+        </button>
+        <div class="nutrition-box"><p><strong>Θερμίδες:</strong> 90 kcal<br/><strong>Αλλεργιογόνα:</strong> Κανένα</p></div>
+        <div class="card-footer"><span class="card-price">2,50€</span>
+          <button class="add-btn" onclick="addItem(19,'Σπιτική Λεμονάδα',2.50,this)">Προσθήκη</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ QUALITY ══════════ -->
+<section id="quality">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow">Γιατί Είμαστε Διαφορετικοί</p>
+      <h2 class="section-title">Η Ποιότητα Pepe's</h2>
+      <p class="section-sub">Η εξαιρετική γεύση ξεκινά πολύ πριν τη σχάρα. Αυτή είναι η υπόσχεσή μας.</p>
+    </div>
+    <div class="quality-grid">
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2c0 6-8 8-8 14a8 8 0 0 0 16 0c0-6-8-8-8-14z"/></svg>
+        </div>
+        <h3>Χειροποίητο Στρώσιμο Κάθε Μέρα</h3>
+        <p>Κάθε πρωί το κρέας μας στρώνεται χειροκίνητα με φρέσκες, εκλεκτές κοπές — ποτέ κατεψυγμένο, ποτέ επεξεργασμένο. Η γεύση είναι πάντα αυθεντική.</p>
+      </div>
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22V12M12 12C12 12 7 9 7 4a5 5 0 0 1 10 0c0 5-5 8-5 8z"/><path d="M8 14s-3 1-3 4h14c0-3-3-4-3-4"/></svg>
+        </div>
+        <h3>Μόνο Τοπικά Υλικά</h3>
+        <p>Συνεργαζόμαστε με αξιόπιστους τοπικούς παραγωγούς. Λαχανικά μαζεμένα καθημερινά, ελαιόλαδο ψυχρής έκθλιψης, βότανα πάντα φρέσκα.</p>
+      </div>
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M12 14v8M8 18h8"/></svg>
+        </div>
+        <h3>Το Μυστικό μας Dry Rub</h3>
+        <p>15 χρόνια στην εξέλιξή του. Μια αυστηρά φυλαγμένη οικογενειακή συνταγή — η τέλεια ισορροπία μεσογειακών μυρωδικών που κάνει κάθε μπουκιά αξέχαστη.</p>
+      </div>
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>Ψήσιμο σε Πραγματικό Κάρβουνο</h3>
+        <p>Ψήνουμε πάνω από πραγματικό κάρβουνο, με τον παραδοσιακό ελληνικό τρόπο. Ασύγκριτη καπνιστή γεύση που κανένα αέριο δεν μπορεί να αναπαράγει.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ REVIEWS ══════════ -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow">Τι Λένε οι Πελάτες μας</p>
+      <h2 class="section-title">Κριτικές</h2>
+    </div>
+    <div class="review-wrap">
+      <div class="review-card" id="reviewCard">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="review-text" id="reviewText"></p>
+        <p class="review-author" id="reviewAuthor"></p>
+        <p class="review-meta" id="reviewMeta"></p>
+      </div>
+      <div class="review-controls" id="reviewControls">
+        <button class="review-arrow" onclick="prevReview()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <!-- dots injected by JS -->
+        <button class="review-arrow" onclick="nextReview()">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ INFO ══════════ -->
+<section id="info">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow">Ελάτε να μας Βρείτε</p>
+      <h2 class="section-title">Τοποθεσία & Ώρες</h2>
+    </div>
+    <div class="info-grid">
+
+      <!-- Χάρτης -->
+      <div class="map-placeholder">
+        <div class="map-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <p style="font-weight:600;font-size:16px;margin-bottom:6px">Pepe's Grill House</p>
+          <p style="color:var(--muted);font-size:14px;line-height:1.7">Δημοκρατίας 53<br/>Νέα Λάμψακος</p>
+        </div>
+        <a href="https://maps.google.com/?q=Δημοκρατίας+53,+Νέα+Λάμψακος" target="_blank">
+          <button class="maps-btn">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Άνοιγμα στο Google Maps
+          </button>
+        </a>
+      </div>
+
+      <!-- Ώρες -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Ώρες Λειτουργίας
+            <span class="live-badge" id="liveBadge">● ΑΝΟΙΧΤΑ</span>
+          </div>
+          <div class="hours-row"><span class="hours-day">Δευτέρα – Πέμπτη</span><span class="hours-time">12:00 – 23:00</span></div>
+          <div class="hours-row"><span class="hours-day">Παρασκευή – Σάββατο</span><span class="hours-time">12:00 – 00:00</span></div>
+          <div class="hours-row"><span class="hours-day">Κυριακή</span><span class="hours-time">12:00 – 22:00</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Καλέστε ή Παραγγείλτε
+          </div>
+          <p class="phone-num">6945 590 872</p>
+          <button class="wa-btn" onclick="openCart()">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Παραγγελία μέσω WhatsApp
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <p class="footer-logo">Pepe's <span>Grill House</span></p>
+  <p class="footer-copy">© <span id="yr"></span> Pepe's Grill House · Δημοκρατίας 53, Νέα Λάμψακος · Φτιαγμένο με 🔥</p>
+</footer>
+
+<!-- ══════════ CART DRAWER ══════════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="handleOverlayClick(event)">
+  <div class="cart-drawer" id="cartDrawer">
+
+    <div class="cart-header">
+      <div>
+        <p class="cart-title" id="cartTitle">Το Καλάθι σας</p>
+        <p class="cart-sub" id="cartSub"></p>
+      </div>
+      <button class="close-btn" onclick="closeCart()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Screen: Cart -->
+    <div class="screen active" id="screenCart">
+      <div class="cart-body" id="cartBody">
+        <div class="cart-empty" id="cartEmpty">
+          <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <p>Το καλάθι σας είναι άδειο.<br/>Προσθέστε κάτι νόστιμο για να ξεκινήσετε!</p>
+        </div>
+        <div id="cartItems"></div>
+      </div>
+      <div class="cart-footer" id="cartFooter" style="display:none">
+        <div class="cart-total-row">
+          <span class="cart-total-lbl">Σύνολο</span>
+          <span class="cart-total-val" id="cartTotal">0,00€</span>
+        </div>
+        <button class="checkout-btn" onclick="goToCheckout()">Συνέχεια →</button>
+      </div>
+    </div>
+
+    <!-- Screen: Checkout -->
+    <div class="screen" id="screenCheckout">
+      <div class="cart-body">
+        <div class="checkout-summary">
+          <p class="checkout-summary-label">Σύνοψη Παραγγελίας</p>
+          <div id="checkoutSummaryItems"></div>
+          <div class="summary-total-row">
+            <span>Σύνολο</span>
+            <span id="checkoutTotal">0,00€</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ονοματεπώνυμο *</label>
+          <div class="form-input-wrap">
+            <span class="form-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <input class="form-input" type="text" id="fName" placeholder="Το ονομά σας"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Διεύθυνση Παράδοσης *</label>
+          <div class="form-input-wrap">
+            <span class="form-icon"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></span>
+            <input class="form-input" type="text" id="fAddress" placeholder="Οδός, αριθμός, περιοχή"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Τηλέφωνο *</label>
+          <div class="form-input-wrap">
+            <span class="form-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <input class="form-input" type="tel" id="fPhone" placeholder="69X XXX XXXX"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ειδικές Οδηγίες</label>
+          <textarea class="form-textarea" id="fComments" placeholder="Αλλεργίες, επιπλέον σάλτσες, χωρίς κρεμμύδι..."></textarea>
+        </div>
+      </div>
+      <div class="cart-footer">
+        <button class="send-btn" id="sendBtn" onclick="sendOrder()">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Αποστολή μέσω WhatsApp
+        </button>
+        <button class="back-btn" onclick="backToCart()">← Πίσω στο Καλάθι</button>
+      </div>
+    </div>
+
+    <!-- Screen: Sent -->
+    <div class="screen" id="screenSent">
+      <div class="order-sent">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h3>Η Παραγγελία Στάλθηκε!</h3>
+        <p>Η παραγγελία σας στάλθηκε μέσω WhatsApp.<br/>Σας επιβεβαιώνουμε σύντομα — ευχαριστούμε! 🙏</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="hero">
-  <h1>Greek Grill Experience</h1>
-  <p>Παραδοσιακό ελληνικό φαγητό με αυθεντική γεύση</p>
-</div>
+<!-- ══════════ JS ══════════ -->
+<script>
+/* ─── WHATSAPP ─── */
+const WA = '306945590872';
 
-<div class="section">
-  <h2>Μενού</h2>
+/* ─── LIVE STATUS ─── */
+(function(){
+  const now=new Date(),d=now.getDay(),t=now.getHours()+now.getMinutes()/60;
+  let open=(d===5||d===6)?t>=12&&t<24:(d===0)?t>=12&&t<22:t>=12&&t<23;
+  const dot=document.getElementById('badgeDot');
+  const st=document.getElementById('statusText');
+  const lb=document.getElementById('liveBadge');
+  if(!open){
+    dot.classList.add('closed');
+    st.textContent='Αυτή τη στιγμή κλειστά';
+    lb.textContent='● ΚΛΕΙΣΤΑ';
+    lb.classList.remove('open');lb.classList.add('closed');
+  } else {
+    lb.classList.add('open');
+  }
+  document.getElementById('yr').textContent=new Date().getFullYear();
+})();
 
-  <h3>Γύρος</h3>
-  <div class="card">Πίτα Γύρος — 4.20€</div>
-  <div class="card">Πίτα Γύρος Κοτόπουλο — 4.50€</div>
-  <div class="card">Μερίδα Γύρος — 8.50€</div>
-  <div class="card">Μερίδα Γύρος Κοτόπουλο — 8.80€</div>
-  <div class="card">Διπλή Πίτα Γύρος — 6.00€</div>
+/* ─── NAV ─── */
+function smoothScroll(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  closeMobileMenu();
+}
+function toggleMenu(){
+  const h=document.getElementById('hamburger');
+  const m=document.getElementById('mobileMenu');
+  h.classList.toggle('open');m.classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
 
-  <h3>Μερίδες</h3>
-  <div class="card">Σουβλάκι Χοιρινό ×2 — 3.60€</div>
-  <div class="card">Σουβλάκι Κοτόπουλο ×2 — 3.60€</div>
-  <div class="card">Μικτή Μερίδα — 12.50€</div>
-  <div class="card">Παϊδάκια Αρνίσια ×3 — 14.50€</div>
-  <div class="card">Πατάτες Τηγανητές — 3.00€</div>
+/* ─── TABS ─── */
+function switchTab(key,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.menu-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+key).classList.add('active');
+}
 
-  <h3>Σαλάτες</h3>
-  <div class="card">Χωριάτικη Σαλάτα — 5.50€</div>
-  <div class="card">Τζατζίκι — 3.00€</div>
-  <div class="card">Λαχανοσαλάτα — 2.50€</div>
-  <div class="card">Ταραμοσαλάτα — 3.50€</div>
+/* ─── NUTRITION ─── */
+function toggleNutrition(btn){
+  const box=btn.nextElementSibling;
+  const isOpen=box.classList.toggle('open');
+  btn.childNodes[2].textContent=isOpen?' Απόκρυψη':' Διατροφή & αλλεργιογόνα';
+}
 
-  <h3>Ποτά</h3>
-  <div class="card">Coca-Cola — 2.00€</div>
-  <div class="card">Νερό — 1.00€</div>
-  <div class="card">Μπύρα Mythos — 3.00€</div>
-  <div class="card">Φρέσκος Χυμός Πορτοκάλι — 3.50€</div>
-  <div class="card">Λεμονάδα Σπιτική — 2.50€</div>
-</div>
+/* ─── CART STATE ─── */
+let cart={};
 
-<div class="section">
-  <h2>Αξιολογήσεις</h2>
-  <div class="card">"Το καλύτερο γύρο στην Αθήνα!"</div>
-  <div class="card">"Απίστευτη ποιότητα και γεύση."</div>
-</div>
+function cartTotal(){
+  return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);
+}
+function cartCount(){
+  return Object.values(cart).reduce((s,i)=>s+i.qty,0);
+}
 
+function addItem(id,name,price,btn){
+  if(cart[id]){cart[id].qty++;}
+  else{cart[id]={id,name,price,qty:1};}
+  updateCardBtn(id);
+  updateCartUI();
+}
+function incItem(id){cart[id].qty++;updateCardBtn(id);updateCartUI();}
+function decItem(id){
+  cart[id].qty--;
+  if(cart[id].qty<=0)delete cart[id];
+  updateCardBtn(id);updateCartUI();
+}
+function delItem(id){delete cart[id];updateCardBtn(id);updateCartUI();}
+
+function updateCardBtn(id){
+  document.querySelectorAll('.menu-card').forEach(card=>{
+    if(parseInt(card.dataset.id)===id){
+      const footer=card.querySelector('.card-footer');
+      const existing=footer.querySelector('.add-btn,.qty-ctrl');
+      if(existing)existing.remove();
+      if(cart[id]){
+        const ctrl=document.createElement('div');
+        ctrl.className='qty-ctrl';
+        ctrl.innerHTML=`
+          <button class="qty-btn" onclick="decItem(${id})">−</button>
+          <span class="qty-num">${cart[id].qty}</span>
+          <button class="qty-btn plus" onclick="incItem(${id})">+</button>`;
+        footer.appendChild(ctrl);
+      } else {
+        const btn=document.createElement('button');
+        btn.className='add-btn';
+        btn.textContent='Προσθήκη';
+        btn.setAttribute('onclick',`addItem(${id},'${card.dataset.name}',${card.dataset.price},this)`);
+        footer.appendChild(btn);
+      }
+    }
+  });
+}
+
+function fmt(n){return n.toFixed(2).replace('.',',')+'€';}
+
+function updateCartUI(){
+  const count=cartCount();
+  const total=cartTotal();
+  /* badge */
+  const countEl=document.getElementById('cartCount');
+  countEl.textContent=count;
+  countEl.classList.toggle('show',count>0);
+  /* cart sub */
+  document.getElementById('cartSub').textContent=
+    count>0?count+' '+(count===1?'προϊόν':'προϊόντα'):'';
+  /* body */
+  const items=Object.values(cart);
+  const bodyEl=document.getElementById('cartItems');
+  const emptyEl=document.getElementById('cartEmpty');
+  const footerEl=document.getElementById('cartFooter');
+  emptyEl.style.display=items.length?'none':'block';
+  footerEl.style.display=items.length?'block':'none';
+  bodyEl.innerHTML=items.map(i=>`
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <p class="cart-item-name">${i.name}</p>
+        <p class="cart-item-price">${fmt(i.price*i.qty)}</p>
+      </div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="decItem(${i.id})">−</button>
+        <span class="qty-num">${i.qty}</span>
+        <button class="qty-btn plus" onclick="incItem(${i.id})">+</button>
+      </div>
+      <button class="cart-item-del" onclick="delItem(${i.id})">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+  document.getElementById('cartTotal').textContent=fmt(total);
+}
+
+/* ─── CART DRAWER ─── */
+function openCart(){
+  document.getElementById('cartOverlay').classList.add('open');
+  document.body.classList.add('no-scroll');
+  showScreen('screenCart');
+  document.getElementById('cartTitle').textContent='Το Καλάθι σας';
+}
+function closeCart(){
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.body.classList.remove('no-scroll');
+}
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('cartOverlay'))closeCart();
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToCheckout(){
+  showScreen('screenCheckout');
+  document.getElementById('cartTitle').textContent='Ολοκλήρωση Παραγγελίας';
+  document.getElementById('cartSub').textContent='';
+  /* populate summary */
+  const items=Object.values(cart);
+  document.getElementById('checkoutSummaryItems').innerHTML=
+    items.map(i=>`<div class="summary-row"><span>${i.name} ×${i.qty}</span><span>${fmt(i.price*i.qty)}</span></div>`).join('');
+  document.getElementById('checkoutTotal').textContent=fmt(cartTotal());
+}
+function backToCart(){
+  showScreen('screenCart');
+  document.getElementById('cartTitle').textContent='Το Καλάθι σας';
+  updateCartUI();
+}
+
+function sendOrder(){
+  const name=document.getElementById('fName').value.trim();
+  const addr=document.getElementById('fAddress').value.trim();
+  const phone=document.getElementById('fPhone').value.trim();
+  const comments=document.getElementById('fComments').value.trim();
+  if(!name||!addr||!phone){
+    [['fName',name],['fAddress',addr],['fPhone',phone]].forEach(([id,v])=>{
+      if(!v)document.getElementById(id).style.borderColor='rgba(192,57,43,.7)';
+    });
+    return;
+  }
+  const lines=Object.values(cart)
+    .map(i=>`  • ${i.name} ×${i.qty}  →  ${fmt(i.price*i.qty)}`).join('\n');
+  const msg=[
+    '🔥 *ΠΑΡΑΓΓΕΛΙΑ — Pepe\'s Grill House*',
+    '',
+    `👤 *Όνομα:* ${name}`,
+    `📍 *Διεύθυνση:* ${addr}`,
+    `📞 *Τηλέφωνο:* ${phone}`,
+    '',
+    '*📋 Παραγγελία:*',
+    lines,
+    '',
+    `💰 *ΣΥΝΟΛΟ: ${fmt(cartTotal())}*`,
+    '',
+    `💬 *Σχόλια:* ${comments||'—'}`,
+    '',
+    '_Ευχαριστούμε για την παραγγελία σας! 🙏_'
+  ].join('\n');
+  window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');
+  showScreen('screenSent');
+  setTimeout(()=>{
+    cart={};
+    document.querySelectorAll('.menu-card').forEach(card=>{
+      const id=parseInt(card.dataset.id);
+      const footer=card.querySelector('.card-footer');
+      const ctrl=footer.querySelector('.qty-ctrl');
+      if(ctrl){
+        ctrl.remove();
+        const btn=document.createElement('button');
+        btn.className='add-btn';
+        btn.textContent='Προσθήκη';
+        btn.setAttribute('onclick',`addItem(${id},'${card.dataset.name}',${card.dataset.price},this)`);
+        footer.appendChild(btn);
+      }
+    });
+    ['fName','fAddress','fPhone','fComments'].forEach(id=>{
+      document.getElementById(id).value='';
+      document.getElementById(id).style.borderColor='';
+    });
+    updateCartUI();
+    closeCart();
+  },3500);
+}
+
+/* ─── REVIEWS ─── */
+const reviews=[
+  {text:'Ο καλύτερος γύρος που έχω φάει! Το κρέας είναι πάντα φρέσκο και η πίτα τέλεια ζεστή. Τρία χρόνια πελάτισσα και ποτέ δεν απογοητεύτηκα.',author:'Μαρία Κ.',meta:'Αθήνα · Πριν 2 μέρες'},
+  {text:'Απίστευτος γύρος και το mixed grill είναι κάτι άλλο εντελώς. Τα αρνίσια παϊδάκια με το dry rub τους δεν έχουν ανταγωνιστή. Ο καλύτερος γκριλ!',author:'Νίκος Π.',meta:'Πειραιάς · Πριν 1 εβδομάδα'},
+  {text:'Τέλειο σουβλάκι κάθε φορά. Γρήγορη εξυπηρέτηση, γενναιόδωρες μερίδες και γεύση που δείχνει την ποιότητα. Η παράδοση ήρθε καυτή!',author:'Σοφία Α.',meta:'Νέα Λάμψακος · Πριν 2 εβδομάδες'},
+  {text:'Τα παϊδάκια είναι φαινόμενο — μπορείς να νιώσεις το dry rub σε κάθε μπουκιά. Παράγγειλα μέσω WhatsApp και η παράδοση ήταν αστραπιαία!',author:'Δημήτρης Μ.',meta:'Πειραιάς · Πριν 3 εβδομάδες'},
+  {text:'Τέλειο οικογενειακό μαγαζί. Τα παιδιά λατρεύουν τον γύρο κοτόπουλο και οι μερίδες είναι πάντα γενναιόδωρες. Το τζατζίκι είναι σπιτική μαγεία!',author:'Ελένη Β.',meta:'Νέα Λάμψακος · Πριν 1 μήνα'},
+];
+let currentReview=0,reviewTimer;
+
+function renderReview(){
+  const r=reviews[currentReview];
+  document.getElementById('reviewText').textContent='"'+r.text+'"';
+  document.getElementById('reviewAuthor').textContent=r.author;
+  document.getElementById('reviewMeta').textContent=r.meta;
+  document.getElementById('reviewCard').style.animation='none';
+  void document.getElementById('reviewCard').offsetWidth;
+  document.getElementById('reviewCard').style.animation='fadeIn .35s ease';
+  document.querySelectorAll('.review-dot').forEach((d,i)=>{
+    d.classList.toggle('active',i===currentReview);
+    d.style.width=i===currentReview?'26px':'8px';
+  });
+}
+
+function buildDots(){
+  const ctrl=document.getElementById('reviewControls');
+  const arrows=ctrl.querySelectorAll('.review-arrow');
+  reviews.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='review-dot'+(i===0?' active':'');
+    d.style.width=i===0?'26px':'8px';
+    d.onclick=()=>{currentReview=i;renderReview();resetTimer();};
+    ctrl.insertBefore(d,arrows[1]);
+  });
+}
+
+function prevReview(){currentReview=(currentReview-1+reviews.length)%reviews.length;renderReview();resetTimer();}
+function nextReview(){currentReview=(currentReview+1)%reviews.length;renderReview();resetTimer();}
+function resetTimer(){clearInterval(reviewTimer);reviewTimer=setInterval(nextReview,5000);}
+
+buildDots();renderReview();
+reviewTimer=setInterval(nextReview,5000);
+</script>
 </body>
 </html>
